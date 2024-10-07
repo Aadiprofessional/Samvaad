@@ -7,8 +7,13 @@ plugins {
 
 android {
     namespace = "com.example.samvaad"
-    compileSdk = flutter.compileSdkVersion
+   
     ndkVersion = flutter.ndkVersion
+    compileSdkVersion 34
+
+    defaultConfig {
+      
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -24,10 +29,11 @@ android {
         applicationId = "com.example.samvaad"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+    
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        minSdkVersion 23  // Change this line
+        targetSdkVersion 34
     }
 
     buildTypes {
@@ -41,4 +47,7 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies {
+    implementation 'com.google.android.material:material:1.9.0' // Ensure this is included
 }

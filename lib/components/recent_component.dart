@@ -9,6 +9,32 @@ class _RecentComponentState extends State<RecentComponent>
     with SingleTickerProviderStateMixin {
   AnimationController? _controller;
 
+  // List of colors for each item
+  final List<Color> colors = [
+    const Color(0xFFB18CFE), // Purple color in hex
+    const Color(0xFF64FCD9), // Cyan-like color
+    const Color(0xFFFF8C82), // Coral-like color
+    const Color(0xFFEE719E), // Pinkish color
+    Colors.orange,
+  ];
+
+  final List<String> itemTexts = [
+    'First Line\nSecond Line',
+    'Item Two\nAnother Line',
+    'Three Items\nMore Lines',
+    'Fourth Text\nYet Another Line',
+    'Fifth Item\nText Continues',
+  ];
+
+  // Simulate the progress percentage for each item
+  final List<double> progressValues = [
+    0.25,
+    0.50,
+    0.75,
+    1.0,
+    0.33
+  ]; // Example progress values
+
   @override
   void initState() {
     super.initState();
@@ -32,65 +58,91 @@ class _RecentComponentState extends State<RecentComponent>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Recent',
+            'RECENT',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // White color for "Recent" text
+              color: Colors.white,
             ),
           ),
-          SizedBox(height: 8),
           Container(
-            height: 250, // Large rectangles to show only two at a time
+            height: 250,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5, // Replace with actual recent items count
+              itemCount: 5,
               itemBuilder: (context, index) {
+                final itemColor = colors[index % colors.length];
+                final progressValue =
+                    progressValues[index]; // Get the progress for this item
                 return GestureDetector(
                   onTap: () {
-                    // Start the loading animation when the rectangle is pressed
                     _controller!.repeat();
                   },
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // The concave rectangle with a circular cutout
-                      ClipPath(
-                        clipper: ConcaveClipper(), // Custom clipper for concave effect
-                        child: Container(
-                          margin: EdgeInsets.only(right: 16.0),
-                          width: MediaQuery.of(context).size.width * 0.7, // Large width
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(30), // Rounded corners
-                          ),
-                          child: Center(
-                            child: Padding(
+                      // Rectangle with regular circular cutout
+                      Container(
+                        margin: EdgeInsets.only(right: 16.0),
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: itemColor.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Stack(
+                          children: [
+                            Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
-                                'Item ${index + 1}',
+                                itemTexts[index],
                                 style: TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.black,
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Image.asset(
+                                  'images/recent1.png',
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      // The smaller play button placed inside the circular cutout
+                      // Play button with progress indicator
                       Positioned(
                         bottom: 0,
-                        left: 20, // Adjust to position it inside the circular cutout
+                        left: 20,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
+                            // Outer circle (behind the Play circle)
                             Container(
-                              width: 50,
-                              height: 50,
+                              width: 90,
+                              height: 90,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Color(
+                                    0xFF2C2C2E), // Fixed color for the outer circle
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            // Play button circle
+                            Container(
+                              width: 70,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                color: itemColor.withOpacity(
+                                    0.8), // Dynamic color for each item
                                 shape: BoxShape.circle,
                               ),
                               child: Center(
@@ -98,26 +150,22 @@ class _RecentComponentState extends State<RecentComponent>
                                   'Play',
                                   style: TextStyle(
                                     fontSize: 14,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
-                            // The animated activity indicator moving around the smaller circle
-                            AnimatedBuilder(
-                              animation: _controller!,
-                              builder: (context, child) {
-                                return Transform.rotate(
-                                  angle: _controller!.value * 6.28, // Full circle rotation
-                                  child: child,
-                                );
-                              },
+                            // Circular progress indicator with percentage
+                            Positioned(
                               child: SizedBox(
-                                width: 70,
-                                height: 70,
+                                width: 80,
+                                height: 80,
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  strokeWidth: 5,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      itemColor), // Dynamic color for each item
+                                  value: progressValue, // Indicate progress
                                 ),
                               ),
                             ),
@@ -134,32 +182,4 @@ class _RecentComponentState extends State<RecentComponent>
       ),
     );
   }
-}
-
-// Custom clipper to create the concave shape with a circular cutout
-// Custom clipper to create the concave shape with a circular cutout
-class ConcaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-
-    // Define the rectangle shape with rounded corners
-    path.addRRect(RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, 0, size.width, size.height),
-      Radius.circular(30),
-    ));
-
-    // Adjust the position of the circular cutout by moving it to the right and bottom
-    final circlePath = Path()
-      ..addOval(Rect.fromCircle(
-        center: Offset(55, size.height - 10), // Adjusted the position: moved right and down
-        radius: 40, // Radius of the circular cutout (width = 80)
-      ));
-
-    // Subtract the circle from the rectangle
-    return Path.combine(PathOperation.difference, path, circlePath);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
