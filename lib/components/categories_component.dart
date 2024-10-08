@@ -19,6 +19,8 @@ class CategoriesComponent extends StatelessWidget {
     'images/History.png',
   ];
 
+CategoriesComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,7 +55,7 @@ class CategoriesComponent extends StatelessWidget {
           ),
           SizedBox(height: 16),
           // Horizontally scrollable row with rounded squares for categories
-          Container(
+          SizedBox(
             height: 100, // Adjust height as needed
             child: ListView.builder(
               scrollDirection: Axis.horizontal,

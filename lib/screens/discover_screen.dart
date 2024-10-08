@@ -4,6 +4,8 @@ import 'package:samvaad/components/categories_component.dart';
 import 'package:samvaad/components/recent_component.dart';
 
 class DiscoverScreen extends StatelessWidget {
+  const DiscoverScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class DiscoverScreen extends StatelessWidget {
                     // Text in two lines
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery.of(context).size.width - 80, // Allow space for the rectangle on the right
                         child: Text(
                           'What do you want to play today?',

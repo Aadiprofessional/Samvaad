@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RecentComponent extends StatefulWidget {
+  const RecentComponent({super.key});
+
   @override
   _RecentComponentState createState() => _RecentComponentState();
 }
@@ -65,7 +67,7 @@ class _RecentComponentState extends State<RecentComponent>
               color: Colors.white,
             ),
           ),
-          Container(
+          SizedBox(
             height: 250,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,

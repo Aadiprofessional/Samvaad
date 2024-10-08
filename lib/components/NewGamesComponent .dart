@@ -23,6 +23,8 @@ class NewGamesComponent extends StatelessWidget {
     'images/SecondGame.png', // Second card image
   ];
 
+ NewGamesComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

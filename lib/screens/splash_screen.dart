@@ -3,6 +3,8 @@ import 'dart:async';
 import 'main_screen.dart'; // Import your main screen
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -96,7 +98,7 @@ class AnimatedGradientCircle extends StatefulWidget {
   final List<Color> colors;
   final int delay;
 
-  const AnimatedGradientCircle({required this.colors, required this.delay});
+  const AnimatedGradientCircle({super.key, required this.colors, required this.delay});
 
   @override
   _AnimatedGradientCircleState createState() => _AnimatedGradientCircleState();

@@ -5,6 +5,8 @@ import 'package:samvaad/components/Recommended.dart';
 import 'package:samvaad/components/categories_component.dart';
 
 class StudyScreen extends StatelessWidget {
+  const StudyScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

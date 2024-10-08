@@ -7,6 +7,8 @@ import 'exercise_screen.dart';
 import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -15,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   // Define the screens for each navigation item
-  static List<Widget> _widgetOptions = <Widget>[ // Removed const keyword
+  static final List<Widget> _widgetOptions = <Widget>[ // Removed const keyword
     DiscoverScreen(),
     StudyScreen(),
     TranslatorScreen(),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:samvaad/screens/level.dart';
 
 class GameDetailSlider extends StatelessWidget {
   final String gameName;
 
-  const GameDetailSlider({Key? key, required this.gameName}) : super(key: key);
+  const GameDetailSlider({super.key, required this.gameName});
 
   @override
   Widget build(BuildContext context) {
@@ -45,20 +46,23 @@ class GameDetailSlider extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(255, 255, 255, 0.48), // Background color for the arrow
+                            color: Color.fromRGBO(255, 255, 255,
+                                0.48), // Background color for the arrow
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.arrow_drop_down, color: Colors.white, size: 20), // Arrow icon
+                              Icon(Icons.arrow_drop_down,
+                                  color: Colors.white, size: 20), // Arrow icon
                             ],
                           ),
                         ),
                         SizedBox(width: 8), // Space between the arrow and text
                         Text(
                           'Close',
-                          style: TextStyle(color: Colors.white, fontSize: 14), // Text color
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 14), // Text color
                         ),
                       ],
                     ),
@@ -100,19 +104,29 @@ class GameDetailSlider extends StatelessWidget {
           ),
           SizedBox(height: 20),
           // Begin button
+          // Begin button
           ElevatedButton(
             onPressed: () {
-              // Perform action on button press
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        LevelScreen()), // Navigate to LevelScreen
+              );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromRGBO(72, 72, 74, 0.72), // Set background color to a semi-transparent color
-              minimumSize: Size(MediaQuery.of(context).size.width * 0.7, 50), // 70% width
+              backgroundColor: Color.fromRGBO(72, 72, 74,
+                  0.72), // Set background color to a semi-transparent color
+              minimumSize: Size(
+                  MediaQuery.of(context).size.width * 0.7, 50), // 70% width
             ),
             child: Text(
               'Begin!',
-              style: TextStyle(color: Colors.white), // Set text color to white for contrast
+              style: TextStyle(
+                  color: Colors.white), // Set text color to white for contrast
             ),
           ),
+
           SizedBox(height: 10),
         ],
       ),

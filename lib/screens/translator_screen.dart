@@ -3,6 +3,8 @@ import 'package:camera/camera.dart';
 import 'dart:async';
 
 class TranslatorScreen extends StatefulWidget {
+  const TranslatorScreen({super.key});
+
   @override
   _TranslatorScreenState createState() => _TranslatorScreenState();
 }

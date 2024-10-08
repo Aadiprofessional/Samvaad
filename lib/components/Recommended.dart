@@ -22,6 +22,8 @@ class RecommendedComponent extends StatelessWidget {
     'images/SecondGame.png', // Second card image
   ];
 
+RecommendedComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
