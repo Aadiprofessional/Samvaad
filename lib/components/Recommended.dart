@@ -9,10 +9,10 @@ class RecommendedComponent extends StatelessWidget {
   ];
 
   final List<String> gameNames = [
-    'Game One\nSubtitle One',
-    'Game Two\nSubtitle Two',
-    'Game Three\nSubtitle Three',
-    'Game Four\nSubtitle Four',
+    'Subject One\nSubtitle One',
+    'Subject Two\nSubtitle Two',
+    'Subject Three\nSubtitle Three',
+    'Subject Four\nSubtitle Four',
   ];
 
   final List<String> gameImages = [

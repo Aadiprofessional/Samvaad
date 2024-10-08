@@ -10,10 +10,10 @@ class NewGamesComponent extends StatelessWidget {
   ];
 
   final List<String> gameNames = [
-    'Game One\nSubtitle One',
-    'Game Two\nSubtitle Two',
-    'Game Three\nSubtitle Three',
-    'Game Four\nSubtitle Four',
+    'Word\nmemorization',
+    'Memory\ncards',
+    'Spot the\nmistakes',
+    'Flip the\ncard'
   ];
 
   final List<String> gameImages = [
@@ -23,7 +23,7 @@ class NewGamesComponent extends StatelessWidget {
     'images/SecondGame.png', // Second card image
   ];
 
- NewGamesComponent({super.key});
+  NewGamesComponent({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -94,7 +94,7 @@ class GameDetailSlider extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                'Your two lines of descriptive text can go here.',
+                'Put your memorization of the sign language words to the test!',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,

@@ -13,19 +13,17 @@ class _RecentComponentState extends State<RecentComponent>
 
   // List of colors for each item
   final List<Color> colors = [
+    Color(0xFFFF8C82), // First card color
+    Color(0xFFEE719E), // Second card color
     const Color(0xFFB18CFE), // Purple color in hex
     const Color(0xFF64FCD9), // Cyan-like color
-    const Color(0xFFFF8C82), // Coral-like color
-    const Color(0xFFEE719E), // Pinkish color
-    Colors.orange,
   ];
 
   final List<String> itemTexts = [
-    'First Line\nSecond Line',
-    'Item Two\nAnother Line',
-    'Three Items\nMore Lines',
-    'Fourth Text\nYet Another Line',
-    'Fifth Item\nText Continues',
+    'Word\nmemorization',
+    'Memory\ncards',
+    'Spot the\nmistakes',
+    'Flip the\ncard'
   ];
 
   // Simulate the progress percentage for each item
@@ -34,7 +32,6 @@ class _RecentComponentState extends State<RecentComponent>
     0.50,
     0.75,
     1.0,
-    0.33
   ]; // Example progress values
 
   @override
@@ -71,7 +68,7 @@ class _RecentComponentState extends State<RecentComponent>
             height: 250,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              itemCount: 4,
               itemBuilder: (context, index) {
                 final itemColor = colors[index % colors.length];
                 final progressValue =
@@ -151,7 +148,7 @@ class _RecentComponentState extends State<RecentComponent>
                                 child: Text(
                                   'Play',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 18,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),

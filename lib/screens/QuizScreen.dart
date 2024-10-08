@@ -9,19 +9,19 @@ class _QuizScreenState extends State<QuizScreen> {
   int currentQuestionIndex = 0;
   int totalQuestions = 5;
   List<String> questions = [
-    'Question 1?',
-    'Question 2?',
-    'Question 3?',
-    'Question 4?',
-    'Question 5?',
+    'What is this letter?',
+    'What is this letter?',
+    'What is this letter?',
+    'What is this letter?',
+    'What is this letter?',
   ];
 
   List<List<String>> options = [
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
+    ['A', 'B', 'C'],
+    ['A', 'B', 'C'],
+    ['A', 'B', 'C'],
+    ['A', 'B', 'C'],
+    ['A', 'B', 'C'],
   ];
 
   List<String> correctAnswers = [
@@ -33,9 +33,13 @@ class _QuizScreenState extends State<QuizScreen> {
   ];
 
   Color buttonColor = Color(0xFFFF8C82);
-  Color inactiveColor = Color(0xFFFFFFFF);
-  Color buttonTextColor = Colors.black;
-  List<Color> optionColors = [Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFFFFFFFF)];
+  Color inactiveColor = Color.fromARGB(0, 255, 255, 255);
+  Color buttonTextColor = Color(0xFFFFFFFF);
+  List<Color> optionColors = [
+   Color.fromARGB(0, 255, 255, 255),
+   Color.fromARGB(0, 255, 255, 255),
+   Color.fromARGB(0, 255, 255, 255)
+  ];
 
   void _selectOption(String selectedOption, int index) {
     setState(() {
@@ -46,14 +50,24 @@ class _QuizScreenState extends State<QuizScreen> {
       optionColors = List.generate(options[currentQuestionIndex].length, (i) {
         return i == index ? buttonColor : inactiveColor;
       });
-      if (currentQuestionIndex < totalQuestions - 1) {
-        currentQuestionIndex++;
-      }
+
+      // Move to next question after a short delay and reset button colors
+      Future.delayed(Duration(seconds: 1), () {
+        setState(() {
+          if (currentQuestionIndex < totalQuestions - 1) {
+            currentQuestionIndex++;
+            // Reset the button colors
+            optionColors = [inactiveColor, inactiveColor, inactiveColor];
+          }
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -65,7 +79,7 @@ class _QuizScreenState extends State<QuizScreen> {
           ),
           Column(
             children: [
-              // Header
+              // Header with Question number
               Container(
                 padding: EdgeInsets.symmetric(vertical: 40, horizontal: 16),
                 child: Row(
@@ -78,7 +92,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       },
                     ),
                     Text(
-                      'Quiz',
+                      'Question ${currentQuestionIndex + 1} / $totalQuestions',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -109,7 +123,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       child: LinearProgressIndicator(
                         value: (currentQuestionIndex + 1) / totalQuestions,
                         backgroundColor: Colors.transparent,
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF8C82)),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFFFF8C82)),
                       ),
                     ),
                     SizedBox(height: 20), // Spacing
@@ -117,68 +132,100 @@ class _QuizScreenState extends State<QuizScreen> {
                 ),
               ),
 
-              // Question Container
+              // White Box with Image and Question
               Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(16),
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(255, 255, 255, 0.48),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                child: Center(
                   child: Stack(
+                    clipBehavior: Clip.none,
                     children: [
-                      // Question Text
-                      Positioned(
-                        top: 80, // Adjust this value for positioning
-                        left: 0,
-                        right: 0,
-                        child: Text(
-                          questions[currentQuestionIndex],
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      Container(
+                        width: screenWidth * 0.9,
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(height: 100),
+                            Text(
+                              questions[currentQuestionIndex],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ),
-                      // Image Container
-                      Align(
-                        alignment: Alignment.topCenter,
+
+                      // Image pop-out style above the container
+                      Positioned(
+                        top: -50, // Moves the image out of the container
+                        left:
+                            (screenWidth * 0.9 - 150) / 2, // Centers the image
                         child: Container(
-                          height: 100, // Adjust height as needed
+                          height: 150, // Adjust height as needed
+                          width: 150, // Adjust width if needed
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+                            borderRadius: BorderRadius.circular(20),
                             child: Image.asset(
-                              'images/question_image_${currentQuestionIndex + 1}.png', // Image for the current question
+                              'images/game1.png',
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
                       ),
-                      // Options
-                      Column(
-                        children: List.generate(options[currentQuestionIndex].length, (index) {
-                          return GestureDetector(
-                            onTap: () => _selectOption(options[currentQuestionIndex][index], index),
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              decoration: BoxDecoration(
-                                color: optionColors[index],
-                                border: Border.all(color: Colors.white),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  options[currentQuestionIndex][index],
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
                     ],
                   ),
+                ),
+              ),
+
+              // Buttons for options
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: List.generate(options[currentQuestionIndex].length,
+                      (index) {
+                    return GestureDetector(
+                      onTap: () => _selectOption(
+                          options[currentQuestionIndex][index], index),
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: optionColors[index],
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            options[currentQuestionIndex][index],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
             ],
