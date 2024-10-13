@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'result.dart'; // Import the ResultScreen
 
 class QuizScreen extends StatefulWidget {
   @override
@@ -8,6 +9,8 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   int currentQuestionIndex = 0;
   int totalQuestions = 5;
+  int correctAnswersCount = 0; // To track the number of correct answers
+
   List<String> questions = [
     'What is this letter?',
     'What is this letter?',
@@ -17,11 +20,11 @@ class _QuizScreenState extends State<QuizScreen> {
   ];
 
   List<List<String>> options = [
-    ['A', 'B', 'C'],
-    ['A', 'B', 'C'],
-    ['A', 'B', 'C'],
-    ['A', 'B', 'C'],
-    ['A', 'B', 'C'],
+    ['Option A', 'Option B', 'Option C'],
+    ['Option A', 'Option B', 'Option C'],
+    ['Option A', 'Option B', 'Option C'],
+    ['Option A', 'Option B', 'Option C'],
+    ['Option A', 'Option B', 'Option C'],
   ];
 
   List<String> correctAnswers = [
@@ -34,30 +37,38 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Color buttonColor = Color(0xFFFF8C82);
   Color inactiveColor = Color.fromARGB(0, 255, 255, 255);
-  Color buttonTextColor = Color(0xFFFFFFFF);
   List<Color> optionColors = [
-   Color.fromARGB(0, 255, 255, 255),
-   Color.fromARGB(0, 255, 255, 255),
-   Color.fromARGB(0, 255, 255, 255)
+    Color.fromARGB(0, 255, 255, 255),
+    Color.fromARGB(0, 255, 255, 255),
+    Color.fromARGB(0, 255, 255, 255),
   ];
 
   void _selectOption(String selectedOption, int index) {
     setState(() {
       if (selectedOption == correctAnswers[currentQuestionIndex]) {
-        // Correct answer logic (can be extended)
+        correctAnswersCount++; // Increment correct answer count
       }
-      // Change the color of the selected option
+
       optionColors = List.generate(options[currentQuestionIndex].length, (i) {
         return i == index ? buttonColor : inactiveColor;
       });
 
-      // Move to next question after a short delay and reset button colors
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
           if (currentQuestionIndex < totalQuestions - 1) {
             currentQuestionIndex++;
-            // Reset the button colors
             optionColors = [inactiveColor, inactiveColor, inactiveColor];
+          } else {
+            // Navigate to ResultScreen after the last question
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ResultScreen(
+                  score: correctAnswersCount, // Pass the correct score
+                  totalQuestions: totalQuestions,
+                ),
+              ),
+            );
           }
         });
       });
@@ -170,8 +181,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       // Image pop-out style above the container
                       Positioned(
                         top: -50, // Moves the image out of the container
-                        left:
-                            (screenWidth * 0.9 - 150) / 2, // Centers the image
+                        left: (screenWidth * 0.9 - 150) / 2, // Centers the image
                         child: Container(
                           height: 150, // Adjust height as needed
                           width: 150, // Adjust width if needed
