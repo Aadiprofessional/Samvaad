@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:samvaad/screens/main_screen.dart';
 import 'package:samvaad/screens/splash_screen.dart';
 
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashScreen(), // Set SplashScreen as the initial screen
+      home: MainScreen(), // Set SplashScreen as the initial screen
     );
   }
 }

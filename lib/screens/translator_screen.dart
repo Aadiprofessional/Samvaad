@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
+import 'dart:io';
+
+import 'package:samvaad/screens/translation_screen.dart';
 
 class TranslatorScreen extends StatefulWidget {
   const TranslatorScreen({super.key});
@@ -15,6 +18,8 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
   Future<void>? _initializeControllerFuture;
   bool _isCameraInitialized = false;
   bool _isImageCaptured = false;
+  XFile? _image;
+  int _selectedCameraIndex = 0; // Index of the currently selected camera
 
   @override
   void initState() {
@@ -23,26 +28,35 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
   }
 
   Future<void> _initializeCamera() async {
-    // Get available cameras
     cameras = await availableCameras();
-    
-    // Check if any cameras are available
     if (cameras.isNotEmpty) {
-      _controller = CameraController(cameras[0], ResolutionPreset.high);
-      _initializeControllerFuture = _controller?.initialize();
-
-      // Check if the controller is initialized
-      _initializeControllerFuture?.then((_) {
-        setState(() {
-          _isCameraInitialized = true;
-        });
-      }).catchError((e) {
-        // Handle initialization error
-        print('Error initializing camera: $e');
-      });
+      // Use the front camera if available; else fallback to back camera
+      _selectedCameraIndex = cameras.indexWhere((camera) => camera.lensDirection == CameraLensDirection.front);
+      if (_selectedCameraIndex == -1) {
+        _selectedCameraIndex = 0; // Default to the back camera
+      }
+      _setupCamera();
     } else {
-      // Handle the case when no camera is found
       print('No cameras available.');
+    }
+  }
+
+  Future<void> _setupCamera() async {
+    _controller = CameraController(cameras[_selectedCameraIndex], ResolutionPreset.high);
+    _initializeControllerFuture = _controller?.initialize();
+    _initializeControllerFuture?.then((_) {
+      setState(() {
+        _isCameraInitialized = true;
+      });
+    }).catchError((e) {
+      print('Error initializing camera: $e');
+    });
+  }
+
+  Future<void> _switchCamera() async {
+    if (cameras.length > 1) {
+      _selectedCameraIndex = (_selectedCameraIndex + 1) % cameras.length;
+      await _setupCamera();
     }
   }
 
@@ -56,8 +70,9 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
     if (_controller != null && _isCameraInitialized) {
       try {
         await _initializeControllerFuture;
-        // Capture image logic would go here
+        final image = await _controller!.takePicture();
         setState(() {
+          _image = image;
           _isImageCaptured = true;
         });
       } catch (e) {
@@ -65,17 +80,55 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
       }
     }
   }
-
-  Widget _buildCameraPreview() {
-    if (!_isCameraInitialized) {
-      return Center(child: CircularProgressIndicator());
-    }
-
-    return AspectRatio(
-      aspectRatio: _controller!.value.aspectRatio,
-      child: CameraPreview(_controller!),
+Widget _buildCameraPreview() {
+  if (!_isCameraInitialized) {
+    return Center(child: CircularProgressIndicator());
+  }
+  if (_isImageCaptured && _image != null) {
+    return Transform(
+      alignment: Alignment.center,
+      transform: _selectedCameraIndex == cameras.indexWhere((camera) => camera.lensDirection == CameraLensDirection.front)
+          ? Matrix4.rotationY(3.14159) // Flip the captured image for the front camera
+          : Matrix4.identity(),
+      child: Image.file(
+        File(_image!.path),
+        fit: BoxFit.cover,
+      ),
     );
   }
+
+  return AspectRatio(
+    aspectRatio: _controller!.value.aspectRatio, // Maintain camera aspect ratio
+    child: Stack(
+      children: [
+        // Camera Preview with BoxFit.cover to fill the container and crop excess
+        Positioned.fill(
+          child: Transform(
+            alignment: Alignment.center,
+            transform: _selectedCameraIndex == cameras.indexWhere((camera) => camera.lensDirection == CameraLensDirection.front)
+                ? Matrix4.rotationY(0) // Flip the preview for the front camera
+                : Matrix4.identity(),
+            child: CameraPreview(_controller!),
+          ),
+        ),
+        // Rotate Button
+        Positioned(
+          top: 10,
+          right: 10,
+          child: GestureDetector(
+            onTap: _switchCamera,
+            child: Image.asset(
+              'images/rotate.png',
+              width: 40,
+              height: 40,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +136,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/Home.png'), // Background image
+            image: AssetImage('images/Home.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -91,7 +144,6 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
           child: ListView(
             padding: EdgeInsets.all(16.0),
             children: [
-              // Main Text
               Text(
                 'Raise your hand!',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
@@ -104,10 +156,8 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                 textAlign: TextAlign.left,
               ),
               SizedBox(height: 16),
-
-              // Rounded Rectangle with Camera Preview (Increased height)
               Container(
-                height: 500, // Increased height
+                height: 500,
                 margin: EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
@@ -119,39 +169,32 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                   child: _buildCameraPreview(),
                 ),
               ),
-
-              // Capture Button
               if (!_isImageCaptured)
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  child: ElevatedButton(
-                    onPressed: _captureImage,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Color(0xFF64FCD9), // Changed color to 64FCD9
+                ElevatedButton(
+                  onPressed: _captureImage,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Text(
-                      'Click!',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    backgroundColor: Color(0xFF64FCD9),
+                  ),
+                  child: Text(
+                    'Click!',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
-
-              // Show buttons after image capture
               if (_isImageCaptured)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      width: MediaQuery.of(context).size.width * 0.25, // 25% width
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.35,
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            _isImageCaptured = false; // Reset for retake
+                            _isImageCaptured = false;
+                            _image = null;
                           });
                         },
                         style: ElevatedButton.styleFrom(
@@ -159,7 +202,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           padding: EdgeInsets.symmetric(vertical: 16.0),
-                          backgroundColor: Color(0xFFFF8C82), // Color for Retake button
+                          backgroundColor: Color(0xFFFF8C82),
                         ),
                         child: Text(
                           'Retake',
@@ -167,20 +210,23 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 5), // Add space between buttons
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      width: MediaQuery.of(context).size.width * 0.6, // 60% width
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.55,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle image submission logic here
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TranslationScreen(image: _image!),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                           padding: EdgeInsets.symmetric(vertical: 16.0),
-                          backgroundColor: Color(0xFF64FCD9), // Color for Submit button
+                          backgroundColor: Color(0xFF64FCD9),
                         ),
                         child: Text(
                           'Submit',
