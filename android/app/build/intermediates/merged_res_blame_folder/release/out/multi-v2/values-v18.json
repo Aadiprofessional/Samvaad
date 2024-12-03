@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.samvaad.app-mergeReleaseResources-59:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Aadi\\.gradle\\caches\\transforms-3\\b1367e19f7f662de81e60ed815670a68\\transformed\\appcompat-1.6.1\\res\\values-v18\\values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

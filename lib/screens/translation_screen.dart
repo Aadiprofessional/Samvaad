@@ -14,56 +14,71 @@ class TranslationScreen extends StatefulWidget {
 
 class _TranslationScreenState extends State<TranslationScreen> {
   String outputText = 'Output text goes here';
-  bool isLoading = true;  // Track loading state
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadModel();  // Load the model when the screen is initialized
+    _loadModel();
   }
 
-  // Load the TFLite model
   Future<void> _loadModel() async {
     print('Loading model...');
-    await Tflite.loadModel(
-      model: 'images/isl_model.tflite', // Path to your trained TFLite model
-      labels: 'images/labels.txt', // Path to your labels file (if applicable)
-    );
-    print('Model loaded');
-    _classifyImage(); // Automatically classify the image once the model is loaded
-  }
+    try {
+      await Tflite.loadModel(
+        model: 'assets/isl_model.tflite',
+        labels: 'assets/labels.txt',
+      );
 
-  // Perform image classification using the model
-  Future<void> _classifyImage() async {
-    print('Classifying image...');
-    var imageInput = File(widget.image.path);
-    var recognitions = await Tflite.runModelOnImage(
-      path: imageInput.path,  // The image path
-      numResults: 2,          // Number of results you want
-      threshold: 0.5,         // Confidence threshold
-      asynch: true,
-    );
-
-    print('Recognition results: $recognitions');  // Log the recognitions
-    
-    if (recognitions != null && recognitions.isNotEmpty) {
+      print('Model loaded');
+      _classifyImage();
+    } catch (e) {
+      print('Error loading model: $e');
       setState(() {
-        outputText = recognitions[0]['label']; // Show the first prediction
-        isLoading = false; // Set loading state to false once classification is complete
-      });
-      print('Prediction: ${recognitions[0]['label']}');
-    } else {
-      setState(() {
-        outputText = 'Unable to recognize gesture';
+        outputText = 'Failed to load model';
         isLoading = false;
       });
-      print('No recognitions found');
+    }
+  }
+
+  Future<void> _classifyImage() async {
+    print('Classifying image...');
+    try {
+      var imageInput = File(widget.image.path);
+      var recognitions = await Tflite.runModelOnImage(
+        path: imageInput.path,
+        numResults: 2,
+        threshold: 0.5,
+        asynch: true,
+      );
+
+      print('Recognition results: $recognitions');
+
+      if (recognitions != null && recognitions.isNotEmpty) {
+        setState(() {
+          outputText = recognitions[0]['label'];
+          isLoading = false;
+        });
+        print('Prediction: ${recognitions[0]['label']}');
+      } else {
+        setState(() {
+          outputText = 'Unable to recognize gesture';
+          isLoading = false;
+        });
+        print('No recognitions found');
+      }
+    } catch (e) {
+      print('Error classifying image: $e');
+      setState(() {
+        outputText = 'Error during classification';
+        isLoading = false;
+      });
     }
   }
 
   @override
   void dispose() {
-    Tflite.close();  // Close the model when done
+    Tflite.close(); // Close the model when done
     super.dispose();
   }
 
@@ -73,7 +88,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/Home.png'), // Background image
+            image: AssetImage('images/Home.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -93,7 +108,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                   borderRadius: BorderRadius.circular(20),
                   child: Image.file(
                     File(widget.image.path),
-                    width: 300,  // Width of the image container
+                    width: 300, // Width of the image container
                     height: 300, // Height of the image container
                     fit: BoxFit.cover,
                   ),
@@ -109,9 +124,10 @@ class _TranslationScreenState extends State<TranslationScreen> {
                   border: Border.all(color: Colors.white, width: 2),
                 ),
                 child: isLoading
-                    ? CircularProgressIndicator(color: Colors.white)  // Show loading spinner
+                    ? CircularProgressIndicator(
+                        color: Colors.white) // Show loading spinner
                     : Text(
-                        outputText,  // Replace with your output text
+                        outputText, // Replace with your output text
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

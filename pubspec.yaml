@@ -36,7 +36,7 @@ dependencies:
   fluttertoast: ^8.2.1
   google_sign_in: ^6.0.0
   cloud_firestore: ^5.4.4
-  image_picker: ^1.1.2
+  image_picker: ^0.8.5+3
   firebase_storage: ^12.3.2
   shared_preferences: ^2.0.15
   google_maps_flutter: ^2.1.1
@@ -44,6 +44,7 @@ dependencies:
   latlong2: ^0.9.1
   flutter_map: ^7.0.2
   http: ^1.2.2
+  google_fonts: ^4.0.4
   url_launcher: ^6.1.5
   geolocator: ^13.0.1
   flutter_svg: ^2.0.10+1
@@ -79,6 +80,8 @@ flutter:
     - images/
     - images/icons/
     - images/icons/Profile.svg
+    - assets/isl_model.tflite
+    - assets/labels.txt
 
     
    
