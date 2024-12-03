@@ -5,15 +5,15 @@ class NewGamesComponent extends StatelessWidget {
   final List<Color> gameColors = [
     Color(0xFFFF8C82), // First card color
     Color(0xFFEE719E), // Second card color
-    Colors.greenAccent,
     Colors.orangeAccent,
+    Colors.greenAccent,
   ];
 
   final List<String> gameNames = [
     'Word\nmemorization',
     'Memory\ncards',
     'Spot the\nmistakes',
-    'Flip the\ncard'
+    'Card\nFlipping'
   ];
 
   final List<String> gameImages = [

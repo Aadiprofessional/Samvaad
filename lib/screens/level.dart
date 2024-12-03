@@ -58,7 +58,7 @@ class _LevelScreenState extends State<LevelScreen> {
                   },
                 ),
                 Text(
-                  'Game Name',
+                  'Word Memorization',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

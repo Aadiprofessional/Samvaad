@@ -20,19 +20,28 @@ class _QuizScreenState extends State<QuizScreen> {
   ];
 
   List<List<String>> options = [
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
-    ['Option A', 'Option B', 'Option C'],
+    ['A', 'B', 'C'],
+    ['U', 'V', 'W'],
+    ['P', 'E', 'F'],
+    ['E', 'M', 'W'],
+    ['O', 'T', 'S'],
   ];
 
   List<String> correctAnswers = [
-    'Option A', // Assume this is the correct answer for each question
-    'Option B',
-    'Option C',
-    'Option A',
-    'Option B',
+    'C', // Assume this is the correct answer for each question
+    'V',
+    'P',
+    'W',
+    'S',
+  ];
+
+  // List of images for each question
+  List<String> questionImages = [
+    'images/Game1.png',
+    'images/Game2.png',
+    'images/Game3.png',
+    'images/Game4.png',
+    'images/Game5.png',
   ];
 
   Color buttonColor = Color(0xFFFF8C82);
@@ -198,7 +207,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.asset(
-                              'images/game1.png',
+                              questionImages[currentQuestionIndex], // Update image dynamically
                               fit: BoxFit.cover,
                             ),
                           ),

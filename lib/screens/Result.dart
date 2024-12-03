@@ -44,16 +44,16 @@ class ResultScreen extends StatelessWidget {
                   "Nice Work!",
                   style: TextStyle(
                     fontSize: 16,
+                     fontWeight: FontWeight.bold, 
                     color: Colors.white,
                   ),
                 ),
 
                 // Animated Tick mark in the center
-                Lottie.asset(
-                  'images/Animation - 1728807740602.json', // Path to your animated tick json
-                  width: 150,
-                  height: 150,
-                  repeat: false,
+                Image.asset(
+                  'images/Check.png', // Path to your animated tick json
+                  width: 200,
+                  height: 200,
                 ),
 
                 // Animated stars based on score
@@ -75,6 +75,7 @@ class ResultScreen extends StatelessWidget {
                   'You Earned ${pointsEarned.toInt()} pts',
                   style: TextStyle(
                     fontSize: 18,
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),

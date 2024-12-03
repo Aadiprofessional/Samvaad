@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:samvaad/screens/level%20copy%202.dart';
+import 'package:samvaad/screens/level%20copy%203.dart';
+import 'package:samvaad/screens/level%20copy.dart';
 import 'package:samvaad/screens/level.dart';
 
 class GameDetailSlider extends StatelessWidget {
@@ -9,6 +12,24 @@ class GameDetailSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+
+    // Determine the appropriate image and level screen based on gameName
+    String sliderImage = 'images/modal.png';
+    Widget levelScreen = LevelScreen();  // Default screen
+
+    if (gameName == 'Word\nmemorization') {
+      sliderImage = 'images/slider1.png';
+      levelScreen = LevelScreen();
+    } else if (gameName == 'Memory\ncards') {
+      sliderImage = 'images/slider1.png';
+      levelScreen = LevelScreen2();
+    } else if (gameName == 'Spot the\nmistakes') {
+      sliderImage = 'images/slider1.png';
+      levelScreen = LevelScreen3();
+    } else if (gameName == 'Card\nFlipping') {
+      sliderImage = 'images/slider1.png';
+      levelScreen = LevelScreen4();
+    }
 
     return Container(
       height: screenHeight * 0.85, // Set to 85% of the screen height
@@ -26,7 +47,7 @@ class GameDetailSlider extends StatelessWidget {
                 Container(
                   child: PageView(
                     children: [
-                      Image.asset('images/slider1.png', fit: BoxFit.cover),
+                      Image.asset(sliderImage, fit: BoxFit.cover),
                       // Add more images as needed
                     ],
                   ),
@@ -104,14 +125,11 @@ class GameDetailSlider extends StatelessWidget {
           ),
           SizedBox(height: 20),
           // Begin button
-          // Begin button
           ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        LevelScreen()), // Navigate to LevelScreen
+                MaterialPageRoute(builder: (context) => levelScreen), // Navigate to the corresponding LevelScreen
               );
             },
             style: ElevatedButton.styleFrom(
@@ -126,7 +144,6 @@ class GameDetailSlider extends StatelessWidget {
                   color: Colors.white), // Set text color to white for contrast
             ),
           ),
-
           SizedBox(height: 10),
         ],
       ),
