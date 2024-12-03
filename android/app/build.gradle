@@ -1,7 +1,9 @@
+// app-level build.gradle
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin" // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin" // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins
 }
 
 android {
@@ -22,7 +24,7 @@ android {
         applicationId = "com.example.samvaad"
         versionCode flutter.versionCode
         versionName flutter.versionName
-        minSdkVersion 23  // Minimum supported SDK version
+        minSdkVersion 23
         targetSdkVersion 34
     }
 
@@ -33,6 +35,12 @@ android {
             shrinkResources false
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/gradle/incremental.annotation.processors'
+        exclude 'META-INF/licenses/*'
+        exclude 'META-INF/notice/*'
+    }
 }
 
 flutter {
@@ -42,6 +50,13 @@ flutter {
 dependencies {
     implementation 'org.tensorflow:tensorflow-lite:2.12.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.12.0'
+    implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0' // Ensure Material Components compatibility
+    implementation 'androidx.annotation:annotation:1.3.0' // Ensure the correct version of annotation dependency
+    implementation 'io.flutter:flutter-plugin-android-lifecycle:2.0.0'
+    // Exclude legacy libraries if necessary
+    configurations.all {
+        exclude group: "com.android.support", module: "support-v4"
+        exclude group: "androidx.annotation", module: "annotation"
+    }
 }

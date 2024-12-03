@@ -1,11 +1,13 @@
+// Root-level build.gradle
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0' // Updated version
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10' // Ensure Kotlin version is compatible
+        // Updated Gradle plugin
+        classpath 'com.android.tools.build:gradle:8.2.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
     }
 }
 
